@@ -3,7 +3,7 @@
  * 
  */
 
-const array = Array.from(Array(10), x => parseInt(Math.random() * 1000))
+const array = Array.from(Array(10000), x => parseInt(Math.random() * 1000))
 console.log(array)
 
 function testArraySort() {
@@ -16,20 +16,27 @@ function testArraySort() {
 
 function testQuickSort() {
   const testArray = [...array];
-  const quickSort = (arr, low, high) => {
-    // 分别对左右部分递归排序
-    if (low < high) {
-      let l = low
-      let h = high
-      let pivot = arr[low]
-      while (l < h) {
-        while (l < h && arr[h] > pivot) high--
-        while (l < h && arr[l] < pivot) low++
-        [arr[h], arr[l]] = [arr[l], arr[h]]
+  const partition = (arr, left, right) => {
+    // 分区操作
+    var pivot = left, // 设定基准值（pivot）
+      index = pivot + 1;
+    for (var i = index; i <= right; i++) {
+      if (arr[i] < arr[pivot]) {
+        [arr[i], arr[index]] = [arr[index], arr[i]];
+        index++;
       }
-      quickSort(arr, low, l - 1)
-      quickSort(arr, l + 1, high)
     }
+    [arr[pivot], arr[index - 1]] = [arr[index - 1], arr[pivot]];
+    return index - 1;
+  }
+  const quickSort = (arr, left, right) => {
+    let partitionIndex;
+      if (left < right) {
+        partitionIndex = partition(arr, left, right);
+        quickSort(arr, left, partitionIndex - 1);
+        quickSort(arr, partitionIndex + 1, right);
+      }
+      return arr;
   }
 
   console.time("测试Quick Sort")
@@ -39,4 +46,4 @@ function testQuickSort() {
 }
 
 testArraySort()
-// testQuickSort()
+testQuickSort()
